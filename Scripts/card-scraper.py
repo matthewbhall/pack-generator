@@ -5,15 +5,58 @@ import getopt
 import urllib2
 import json
 from bs4 import BeautifulSoup
+import re
+import json
 
-def get_card_object(url):
+def convert_mana_cost(cost):
+    pieces = re.findall(r'[\dWUBRG]', cost)
+    cmc = 0
+    for piece in pieces:
+        if piece.isdigit():
+            cmc += int(piece)
+        else:
+            cmc += 1
+    return cmc
+    
+
+def determine_if_creature(type):
+    if "Creature" in type:
+        return True
+    return False
+    
+def determine_rarity(content):
+    pieces = content.split(',')
+    rarity = pieces[1].strip()
+    return rarity
+
+def get_card(url):
     response = urllib2.urlopen(url)
     html = response.read()
     soup = BeautifulSoup(html.decode('utf-8','replace'), 'html.parser')
     response.close()
     
-    title = soup.find('meta', {'name' : 'twitter:title'})
-    print 'title %s' % title['content']
+    # Extract card name from title
+    tag = soup.find('meta', {'name' : 'twitter:title'})
+    name = tag['content']
+    
+    # Extract mana cost and is_creature from description
+    tag = soup.find('meta', {'name' : 'twitter:description'})
+    description = tag['content']
+    pieces = description.split(',')
+    cmc = convert_mana_cost(pieces[0])
+    is_creature = determine_if_creature(pieces[1])
+    
+    # Extract rarity from data1
+    tag = soup.find('meta', {'name' : 'twitter:data1'})
+    rarity = determine_rarity(tag['content'])
+    
+    # Extract imgage
+    tag = soup.find('meta', {'name' : 'twitter:image'})
+    image = tag['content']
+    index = image.find('?')
+    image = image[:index]
+    
+    return {'name': name, 'cmc': cmc, 'is_creature': is_creature, 'rarity': rarity, 'image': image}
     
 
 def main(argv):
@@ -46,11 +89,16 @@ def main(argv):
     
     data = {}
     data['cards'] = []
-    for x in range(1, count): #todo switch 1 to count
+    for x in range(1, count + 1): #todo switch 1 to count
         url = 'https://scryfall.com/card/%s/%d' % (set, x)
         #data['cards'].append(create_card_objects(html))
-        get_card_object(url)
-        print data
+        card = get_card(url)
+        print card
+        data['cards'].append(card)
+        
+    outfile = open('%s.txt' % set, 'w')
+    json.dump(data, outfile)
+    print 'card data written to %s.txt' % set
         
 
 if __name__ == "__main__":
