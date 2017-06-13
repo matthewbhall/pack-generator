@@ -1,2 +1,2 @@
 # pack-generator
-Generates Magic: The Gathering packs
+Generates Magic: The Gathering packs.
