@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "PackGenerator", "PackGenerator\PackGenerator.ccproj", "{C38942E3-4956-4898-B17C-5C937D341E6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRole", "WebRole1\WebRole.csproj", "{F921F975-4E68-411A-85B8-A6CEA042D7F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRole", "WebRole\WebRole.csproj", "{F921F975-4E68-411A-85B8-A6CEA042D7F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

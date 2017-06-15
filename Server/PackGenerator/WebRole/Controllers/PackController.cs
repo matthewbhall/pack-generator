@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net;
 using System.Web.Http;
+using Newtonsoft.Json;
 using Swashbuckle.Swagger.Annotations;
+using WebRole.Managers;
 
 namespace WebRole.Controllers
 {
@@ -16,7 +14,10 @@ namespace WebRole.Controllers
         [SwaggerResponse(HttpStatusCode.OK)]
         public string Get(string set)
         {
-            return $"pack from {set}";
+            var gatherer = Gatherer.Instance();
+            SetManager manager;
+            gatherer.SetManagers.TryGetValue(set, out manager);
+            return JsonConvert.SerializeObject(manager.GetMythics(), Formatting.Indented);
         }
     }
 }

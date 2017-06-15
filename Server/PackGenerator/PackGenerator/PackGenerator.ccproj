@@ -32,24 +32,28 @@
   </PropertyGroup>
   <!-- Items for the project -->
   <ItemGroup>
+    <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
     <ServiceDefinition Include="ServiceDefinition.csdef" />
     <ServiceConfiguration Include="ServiceConfiguration.Local.cscfg" />
-    <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="WebRoleContent" />
+    <Folder Include="WebRoleContent\bin" />
+    <Folder Include="WebRoleContent\bin\Cards\" />
   </ItemGroup>
   <ItemGroup>
-    <DiagnosticsConfiguration Include="WebRoleContent\diagnostics.wadcfgx" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WebRole1\WebRole.csproj">
+    <ProjectReference Include="..\WebRole\WebRole.csproj">
       <Name>WebRole</Name>
       <Project>{f921f975-4e68-411a-85b8-a6cea042d7f4}</Project>
       <Private>True</Private>
       <RoleType>Web</RoleType>
       <RoleName>WebRole</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="WebRoleContent\bin\Cards\akh.txt">
+      <SubType>Content</SubType>
+    </Content>
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>

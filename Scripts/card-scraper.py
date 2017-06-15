@@ -99,7 +99,6 @@ def main(argv):
     data = []
     for x in range(1, count + 1): #todo switch 1 to count
         url = 'https://scryfall.com/card/%s/%d' % (set, x)
-        #data['cards'].append(create_card_objects(html))
         card = get_card(url)
         print card
         data.append(card)
