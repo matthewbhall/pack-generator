@@ -37,8 +37,8 @@
     <ServiceConfiguration Include="ServiceConfiguration.Local.cscfg" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="WebRoleContent\bin" />
-    <Folder Include="WebRoleContent\bin\Cards\" />
+    <Folder Include="Profiles" />
+    <Folder Include="WebRoleContent\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebRole\WebRole.csproj">
@@ -51,9 +51,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="WebRoleContent\bin\Cards\akh.txt">
-      <SubType>Content</SubType>
-    </Content>
+    <PublishProfile Include="Profiles\pack-generatorProduction.azurePubxml" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>

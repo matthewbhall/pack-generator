@@ -3,7 +3,7 @@
   <Role name="WebRole">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=packgenerator;AccountKey=$(_packgenerator.key_)" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>
