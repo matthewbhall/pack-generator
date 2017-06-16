@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
+using System.Net.Http.Formatting;
 using System.Web.Http;
 
 namespace WebRole1
@@ -11,15 +9,18 @@ namespace WebRole1
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-            config.Formatters.JsonFormatter.SupportedMediaTypes
-                .Add(new MediaTypeHeaderValue("text/html"));
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.MediaTypeMappings
+                .Add(new RequestHeaderMapping("Accept",
+                    "text/html",
+                    StringComparison.InvariantCultureIgnoreCase,
+                    true,
+                    "application/json"));
 
             // Web API routes
             config.MapHttpAttributeRoutes();
-
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{set}",
+                routeTemplate: "api/{controller}/{setName}",
                 defaults: new { set = RouteParameter.Optional }
             );
         }

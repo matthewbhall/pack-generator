@@ -48,12 +48,19 @@ def get_card(url):
     tag = soup.find('meta', {'name' : 'twitter:title'})
     name = tag['content']
     
-    # Extract mana cost and is_creature from description
+    # Extract mana cost, is_creature, and is_basic from description
     tag = soup.find('meta', {'name' : 'twitter:description'})
     description = tag['content']
     pieces = description.split(',')
-    cmc, color = extract_cmc_and_color(pieces[0])
-    is_creature = extract_if_creature(pieces[1])
+    if "Basic Land" in pieces[0]:
+        cmc = 0
+        color = colorless
+        is_creature = False
+        is_basic = True
+    else:
+        cmc, color = extract_cmc_and_color(pieces[0])
+        is_creature = extract_if_creature(pieces[1])
+        is_basic = False
     
     # Extract rarity from data1
     tag = soup.find('meta', {'name' : 'twitter:data1'})
@@ -65,7 +72,7 @@ def get_card(url):
     index = image.find('?')
     image = image[:index]
     
-    return {'Name': name, 'ConvertedManaCost': cmc, 'Color': color, 'IsCreature': is_creature, 'Rarity': rarity, 'Image': image}
+    return {'Name': name, 'ConvertedManaCost': cmc, 'Color': color, 'IsCreature': is_creature, 'IsBasic': is_basic, 'Rarity': rarity, 'Image': image}
     
 
 def main(argv):
