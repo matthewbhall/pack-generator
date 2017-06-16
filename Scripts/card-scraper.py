@@ -8,23 +8,32 @@ from bs4 import BeautifulSoup
 import re
 import json
 
-def convert_mana_cost(cost):
+colors = {'W': 'White', 'U': 'Blue', 'B': 'Black', 'R': 'Red', 'G': 'Green'}
+colorless = "Colorless"
+multicolored = "Multicolored"
+
+def extract_cmc_and_color(cost):
     pieces = re.findall(r'[\dWUBRG]', cost)
     cmc = 0
+    color = colorless
     for piece in pieces:
         if piece.isdigit():
             cmc += int(piece)
         else:
+            if color == colorless:
+                color = colors[piece]
+            elif color != colors[piece]:
+                color = multicolored
             cmc += 1
-    return cmc
+    return cmc, color
     
 
-def determine_if_creature(type):
+def extract_if_creature(type):
     if "Creature" in type:
         return True
     return False
     
-def determine_rarity(content):
+def extract_rarity(content):
     pieces = content.split(',')
     rarity = pieces[1].strip()
     return rarity
@@ -39,16 +48,23 @@ def get_card(url):
     tag = soup.find('meta', {'name' : 'twitter:title'})
     name = tag['content']
     
-    # Extract mana cost and is_creature from description
+    # Extract mana cost, is_creature, and is_basic from description
     tag = soup.find('meta', {'name' : 'twitter:description'})
     description = tag['content']
     pieces = description.split(',')
-    cmc = convert_mana_cost(pieces[0])
-    is_creature = determine_if_creature(pieces[1])
+    if "Basic Land" in pieces[0]:
+        cmc = 0
+        color = colorless
+        is_creature = False
+        is_basic = True
+    else:
+        cmc, color = extract_cmc_and_color(pieces[0])
+        is_creature = extract_if_creature(pieces[1])
+        is_basic = False
     
     # Extract rarity from data1
     tag = soup.find('meta', {'name' : 'twitter:data1'})
-    rarity = determine_rarity(tag['content'])
+    rarity = extract_rarity(tag['content'])
     
     # Extract imgage
     tag = soup.find('meta', {'name' : 'twitter:image'})
@@ -56,7 +72,7 @@ def get_card(url):
     index = image.find('?')
     image = image[:index]
     
-    return {'name': name, 'cmc': cmc, 'is_creature': is_creature, 'rarity': rarity, 'image': image}
+    return {'Name': name, 'ConvertedManaCost': cmc, 'Color': color, 'IsCreature': is_creature, 'IsBasic': is_basic, 'Rarity': rarity, 'Image': image}
     
 
 def main(argv):
@@ -87,14 +103,12 @@ def main(argv):
     print 'Set abbreviation is %s' % set
     print 'Card count is %d' % count
     
-    data = {}
-    data['cards'] = []
+    data = []
     for x in range(1, count + 1): #todo switch 1 to count
         url = 'https://scryfall.com/card/%s/%d' % (set, x)
-        #data['cards'].append(create_card_objects(html))
         card = get_card(url)
         print card
-        data['cards'].append(card)
+        data.append(card)
         
     outfile = open('%s.txt' % set, 'w')
     json.dump(data, outfile)
