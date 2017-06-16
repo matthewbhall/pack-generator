@@ -6,10 +6,21 @@ using WebRole.Models;
 
 namespace WebRole.Managers
 {
+    /// <summary>
+    /// PackManager is responsible for generating randomized packs.
+    /// </summary>
     public class PackManager
     {
         private Random rng = new Random();
 
+        /// <summary>
+        /// Generates a random booster pack of cards from a given set.
+        /// 
+        /// Uses data mined rules and probabilities for what a booster pack
+        /// consists of.
+        /// </summary>
+        /// <param name="set"></param>
+        /// <returns></returns>
         public List<Card> GeneratePack(Set set)
         {
             var pack = new List<Card>();
@@ -48,6 +59,12 @@ namespace WebRole.Managers
             return pack;
         }
 
+        /// <summary>
+        /// Generate a random foil card. Foils can be of any rarity, but are
+        /// skewed towards common.
+        /// </summary>
+        /// <param name="set">The set to generate a foil from.</param>
+        /// <returns>A random foil card.</returns>
         private Card GenerateFoil(Set set)
         {
             // Foil cards can be mythic rare, rare, uncommon, common, or land
@@ -64,29 +81,36 @@ namespace WebRole.Managers
                 // Common
                 return set.Commons[rng.Next(set.Commons.Count)].Foil();
             }
-            else if (random < 112)
+
+            if (random < 112)
             {
                 // Uncommon
                 return set.Uncommons[rng.Next(set.Uncommons.Count)].Foil();
             }
-            else if (random < 120)
+
+            if (random < 120)
             {
                 // Land
                 return set.BasicLands[rng.Next(set.BasicLands.Count)].Foil();
             }
-            else if (random < 127)
+
+            if (random < 127)
             {
                 // Rare
                 return set.Rares[rng.Next(set.Rares.Count)].Foil();
             }
-            else
-            {
-                // Mythic Rare
-                return set.Mythics[rng.Next(set.Mythics.Count)].Foil();
-            }
 
+            // Mythic Rare
+            return set.Mythics[rng.Next(set.Mythics.Count)].Foil();
         }
 
+        /// <summary>
+        /// Pick a specified number of cards randomly out of a given card pool.
+        /// Duplicates are not allowed.
+        /// </summary>
+        /// <param name="numCards">The number of cards to pick.</param>
+        /// <param name="cardPool">The card pool to pick from.</param>
+        /// <returns>A list of randomly selected cards.</returns>
         private List<Card> PickRandomCards(int numCards, List<Card> cardPool)
         {
             List<int> indexes = new List<int>();

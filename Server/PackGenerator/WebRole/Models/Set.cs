@@ -5,6 +5,11 @@ using System.Web;
 
 namespace WebRole.Models
 {
+    /// <summary>
+    /// A set is a group of cards that are released together.
+    /// 
+    /// Sets have cards of varying rarities.
+    /// </summary>
     public class Set
     {
         public List<Card> Mythics { get; set; } = new List<Card>();

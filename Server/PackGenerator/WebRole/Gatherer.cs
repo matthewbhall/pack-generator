@@ -9,6 +9,12 @@ using WebRole.Models;
 
 namespace WebRole
 {
+    /// <summary>
+    /// Gatherer is a singleton class in charge of managing the vast library of
+    /// card sets. Gatherer houses a single record of information about each set
+    /// allows controllers to use them. It also houses managers that controllers
+    /// can use to perform specific tasks. 
+    /// </summary>
     public class Gatherer
     {
         public List<String> SetNames { get; } = new List<string> { "akh" };
@@ -17,6 +23,12 @@ namespace WebRole
         private Dictionary<String, Set> Sets { get; } = new Dictionary<string, Set>();
         private static Gatherer _instance = null;
 
+        /// <summary>
+        /// Gets the Gatherer instance for this process.
+        /// 
+        /// The instance is lazily instantiated.
+        /// </summary>
+        /// <returns>A Gatherer object.</returns>
         public static Gatherer Instance()
         {
             if (_instance == null)
@@ -27,6 +39,11 @@ namespace WebRole
             return _instance;
         }
 
+        /// <summary>
+        /// Gets a set associated with a particular set name (abbreviated).
+        /// </summary>
+        /// <param name="setName">The abbreviated name of the set.</param>
+        /// <returns>The set of cards.</returns>
         public Set GetSet(string setName)
         {
             Set set = null;
@@ -49,6 +66,7 @@ namespace WebRole
             }
         }
 
+        // Load a set from a json file
         private static Set LoadSet(string setName)
         {
             string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Cards", $"{setName}.txt");
@@ -94,8 +112,6 @@ namespace WebRole
 
                 return set;
             }
-
-
         }
     }
 }

@@ -9,6 +9,7 @@ namespace WebRole1
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
+            // Return json explicitly so browsers can format accordingly
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.MediaTypeMappings
                 .Add(new RequestHeaderMapping("Accept",
                     "text/html",
